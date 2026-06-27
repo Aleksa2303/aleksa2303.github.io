@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aleksa — Web Design for Local Businesses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #faf8f4;
+    --ink: #16181c;
+    --muted: #6f7177;
+    --line: #e4e1d8;
+    --pine: #2f5d50;
+    --pine-light: #6fa190;
+    --pine-pale: #e7efea;
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.6rem 6vw;
+    transition: background 0.3s, border-color 0.3s;
+    border-bottom: 1px solid transparent;
+  }
+  nav.scrolled {
+    background: rgba(250, 248, 244, 0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .nav-links { display: flex; gap: 2.4rem; list-style: none; align-items: center; }
+  .nav-links a {
+    font-size: 0.92rem;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    background: var(--ink);
+    color: var(--bg) !important;
+    padding: 0.6rem 1.3rem;
+    border-radius: 100px;
+    font-size: 0.88rem;
+    font-weight: 500;
+  }
+  .nav-toggle { display: none; }
+
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .nav-toggle { display: block; font-size: 0.88rem; }
+  }
+
+  section { padding: 0 6vw; }
+
+  /* HERO */
+  .hero {
+    min-height: 92vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding-top: 6rem;
+  }
+  .hero-eyebrow {
+    font-size: 0.85rem;
+    color: var(--pine);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 1.4rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--pine);
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--pine);
+  }
+  .hero p {
+    margin-top: 1.6rem;
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 42ch;
+  }
+  .hero-actions {
+    margin-top: 2.4rem;
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+  .btn-primary, .btn-ghost {
+    padding: 0.95rem 1.8rem;
+    border-radius: 100px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+    transition: transform 0.2s, background 0.2s;
+  }
+  .btn-primary:hover { background: var(--pine); transform: translateY(-2px); }
+  .btn-ghost {
+    border: 1px solid var(--line);
+    color: var(--ink);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--pine); background: var(--pine-pale); }
+
+  .hero-meta {
+    margin-top: 4.5rem;
+    display: flex; gap: 3rem; flex-wrap: wrap;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .hero-meta-item .num {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+  .hero-meta-item .label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1.in { transition-delay: 0.08s; }
+  .reveal-delay-2.in { transition-delay: 0.16s; }
+
+  /* SECTION HEADER */
+  .section-tag {
+    font-size: 0.85rem;
+    color: var(--pine);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.01em;
+    max-width: 16ch;
+  }
+  .section-title em { font-style: italic; font-weight: 400; color: var(--pine); }
+  .section-intro {
+    margin-top: 1.2rem;
+    color: var(--muted);
+    max-width: 50ch;
+    font-size: 1.05rem;
+  }
+
+  /* WORK */
+  .work { padding-top: 9rem; padding-bottom: 7rem; }
+  .work-grid {
+    margin-top: 3.5rem;
+    display: grid;
+    gap: 3rem;
+  }
+  .project-card {
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .project-frame {
+    background: #efece4;
+    padding: 1.4rem 1.4rem 0;
+  }
+  .browser-bar {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding-bottom: 1rem;
+  }
+  .browser-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: #d4d0c4;
+  }
+  .browser-url {
+    margin-left: 0.8rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: #fff;
+    padding: 0.35rem 0.9rem;
+    border-radius: 6px;
+    flex: 1;
+    max-width: 280px;
+  }
+  .project-preview {
+    width: 100%;
+    aspect-ratio: 16/10;
+    border: none;
+    display: block;
+    background: #fff;
+    transform-origin: top left;
+  }
+  .preview-clip {
+    width: 100%;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+    position: relative;
+  }
+  .preview-clip iframe {
+    width: 250%;
+    height: 250%;
+    transform: scale(0.4);
+    transform-origin: top left;
+    border: none;
+    pointer-events: none;
+  }
+  .project-body {
+    padding: 1.8rem 1.8rem 2rem;
+  }
+  .project-kicker {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  .project-name {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  .project-desc {
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.98rem;
+  }
+  .project-tags {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .tag {
+    font-size: 0.78rem;
+    color: var(--pine);
+    background: var(--pine-pale);
+    padding: 0.3rem 0.7rem;
+    border-radius: 100px;
+  }
+  .project-link {
+    margin-top: 1.4rem;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .project-link::after { content: '→'; transition: transform 0.2s; }
+  .project-link:hover::after { transform: translateX(4px); }
+
+  @media (min-width: 860px) {
+    .project-card { display: grid; grid-template-columns: 1.3fr 1fr; }
+    .project-frame { padding: 1.6rem 0 1.6rem 1.6rem; }
+    .project-body { display: flex; flex-direction: column; justify-content: center; }
+  }
+
+  /* PROCESS */
+  .process { padding: 7rem 6vw; background: var(--ink); color: var(--bg); }
+  .process .section-tag { color: var(--pine-light); }
+  .process .section-title { color: var(--bg); }
+  .process-grid {
+    margin-top: 3.5rem;
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+  .process-step .step-num {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    color: var(--pine-light);
+    margin-bottom: 1rem;
+  }
+  .process-step h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.3rem;
+    margin-bottom: 0.6rem;
+  }
+  .process-step p {
+    color: #a8aab0;
+    font-size: 0.95rem;
+  }
+
+  /* CONTACT */
+  .contact { padding: 8rem 6vw; text-align: center; }
+  .contact .section-title { max-width: none; margin: 0 auto; }
+  .contact p { margin: 1.2rem auto 0; }
+  .contact-actions {
+    margin-top: 2.4rem;
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  }
+
+  footer {
+    padding: 2.5rem 6vw;
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.85rem;
+    color: var(--muted);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#" class="nav-logo">Aleksa</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact" class="nav-cta">Get in touch</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Available for new projects</div>
+  <h1>Clean, fast websites for businesses that don't have one <em>yet</em>.</h1>
+  <p>I design and build websites for small businesses — cafés, restaurants, gyms, studios — that want to look as good online as they do in person.</p>
+  <div class="hero-actions">
+    <a href="#work" class="btn-primary">See the work</a>
+    <a href="#contact" class="btn-ghost">Start a project</a>
+  </div>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="num">3</div>
+      <div class="label">Concept builds</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="num">100%</div>
+      <div class="label">Mobile responsive</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="num">~7 days</div>
+      <div class="label">Typical turnaround</div>
+    </div>
+  </div>
+</section>
+
+<section class="work" id="work">
+  <div class="section-tag reveal">Selected work</div>
+  <h2 class="section-title reveal reveal-delay-1">Built to look <em>premium</em>, not generic.</h2>
+  <p class="section-intro reveal reveal-delay-2">Every project gets its own identity — colors, type, and motion chosen for that business, not a template with a new logo dropped in.</p>
+
+  <div class="work-grid">
+    <div class="project-card reveal">
+      <div class="project-frame">
+        <div class="browser-bar">
+          <div class="browser-dot"></div><div class="browser-dot"></div><div class="browser-dot"></div>
+          <div class="browser-url">brasero.co.uk</div>
+        </div>
+        <div class="preview-clip">
+          <iframe src="brasero.html" tabindex="-1"></iframe>
+        </div>
+      </div>
+      <div class="project-body">
+        <div class="project-kicker">Restaurant · Concept design</div>
+        <div class="project-name">Brasero</div>
+        <p class="project-desc">A live-fire grill restaurant in Shoreditch, London. Dark, moody palette with ember animation and a custom cursor to match the open-flame concept.</p>
+        <div class="project-tags">
+          <span class="tag">Animation</span>
+          <span class="tag">Responsive</span>
+          <span class="tag">Custom cursor</span>
+        </div>
+        <a href="brasero.html" target="_blank" class="project-link">View live demo</a>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-frame">
+        <div class="browser-bar">
+          <div class="browser-dot"></div><div class="browser-dot"></div><div class="browser-dot"></div>
+          <div class="browser-url">zlatnasolja.rs</div>
+        </div>
+        <div class="preview-clip">
+          <iframe src="zlatna-solja.html" tabindex="-1"></iframe>
+        </div>
+      </div>
+      <div class="project-body">
+        <div class="project-kicker">Café · Concept design</div>
+        <div class="project-name">Zlatna Šolja</div>
+        <p class="project-desc">A warm neighbourhood café in Novi Sad. Lighter palette, Playfair Display headlines, built to feel inviting on a phone screen first.</p>
+        <div class="project-tags">
+          <span class="tag">Light theme</span>
+          <span class="tag">Local business</span>
+          <span class="tag">Fast load</span>
+        </div>
+        <a href="zlatna-solja.html" target="_blank" class="project-link">View live demo</a>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-frame">
+        <div class="browser-bar">
+          <div class="browser-dot"></div><div class="browser-dot"></div><div class="browser-dot"></div>
+          <div class="browser-url">apextraining.co.uk</div>
+        </div>
+        <div class="preview-clip">
+          <iframe src="gym-demo.html" tabindex="-1"></iframe>
+        </div>
+      </div>
+      <div class="project-body">
+        <div class="project-kicker">Gym & Personal Training · Concept design</div>
+        <div class="project-name">APEX Training</div>
+        <p class="project-desc">A personal trainer site built for conversion. High contrast, bold condensed type, noise texture overlay — designed to match the intensity of the brand.</p>
+        <div class="project-tags">
+          <span class="tag">Dark theme</span>
+          <span class="tag">Bold typography</span>
+          <span class="tag">Conversion focused</span>
+        </div>
+        <a href="gym-demo.html" target="_blank" class="project-link">View live demo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="section-tag reveal">How it works</div>
+  <h2 class="section-title reveal reveal-delay-1">Three steps, <em>no jargon</em>.</h2>
+
+  <div class="process-grid">
+    <div class="process-step reveal">
+      <div class="step-num">01</div>
+      <h3>Send the brief</h3>
+      <p>Tell me about your business — what you do, who your customers are, and any sites you like the look of. Five minutes is enough.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-1">
+      <div class="step-num">02</div>
+      <h3>I design and build</h3>
+      <p>You get a working preview link to react to — not just a static mockup. Changes are fast since I build directly in code.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-2">
+      <div class="step-num">03</div>
+      <h3>You review and launch</h3>
+      <p>We adjust until it's right, then it goes live. You walk away with a site that actually looks like your business.</p>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="section-tag reveal">Get in touch</div>
+  <h2 class="section-title reveal reveal-delay-1">Don't have a website yet? <em>Let's fix that.</em></h2>
+  <p class="section-intro reveal reveal-delay-2" style="margin-left:auto;margin-right:auto;">Send a message and I'll get back to you within a day with a couple of ideas for what your site could look like.</p>
+  <div class="contact-actions reveal reveal-delay-2">
+    <a href="mailto:aleksagraovac56@gmail.com" class="btn-primary">Email me</a>
+    <a href="https://instagram.com/alexcuts77" target="_blank" class="btn-ghost">Instagram</a>
+  </div>
+</section>
+
+<footer>
+  <span>Aleksa — Web Design</span>
+  <span>Based in Serbia, working with clients worldwide</span>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
